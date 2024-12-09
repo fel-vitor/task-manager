@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { HeaderComponent } from 'src/shared/components/header/header.component';
 import { AppComponent } from './app.component';
-import { FakeHeaderComponent } from '../testing/mocks/fake-header.component';
+import { FakeHeaderComponent } from '@testing/mocks/fake-header.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
