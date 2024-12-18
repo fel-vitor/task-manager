@@ -1,14 +1,24 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
-import { TasksService } from './tasks.service';
+import { provideHttpClient } from '@angular/common/http';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing';
 import { Task } from '../../interfaces/task.interface';
+import { TasksService } from './tasks.service';
 
 describe('TasksService', () => {
   let service: TasksService;
+  let httpTestingController: HttpTestingController;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    });
     service = TestBed.inject(TasksService);
+
+    httpTestingController = TestBed.inject(HttpTestingController);
   });
 
   it('getAll() deve retornar uma lista de tarefas', fakeAsync(() => {
@@ -18,8 +28,21 @@ describe('TasksService', () => {
       result = tasks;
     });
 
+    const request = httpTestingController.expectOne('/tasks');
+
+    const fakeTasks: Task[] = [
+      { title: 'Item 1', completed: false },
+      { title: 'Item 2', completed: false },
+      { title: 'Item 3', completed: false },
+      { title: 'Item 4', completed: true },
+      { title: 'Item 5', completed: true },
+      { title: 'Item 6', completed: true },
+    ];
+
+    request.flush(fakeTasks);
+
     tick();
 
-    expect(result).toEqual([]);
+    expect(result).toEqual(fakeTasks);
   }));
 });
