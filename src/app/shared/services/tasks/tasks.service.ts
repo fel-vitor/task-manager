@@ -10,6 +10,6 @@ export class TasksService {
   httpClient = inject(HttpClient);
 
   getAll(): Observable<Task[]> {
-    return this.httpClient.get<Task[]>('/tasks');
+    return this.httpClient.get<Task[]>('/api/tasks');
   }
 }
