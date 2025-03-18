@@ -26,4 +26,14 @@ export class ListComponent implements OnInit {
   ngOnInit(): void {
     this.tasksService.getAll().subscribe((tasks) => this.tasks.set(tasks));
   }
+
+  onComplete(task: Task) {
+    this.tasksService.patch(task.id, { completed: true }).subscribe(task => {
+      this.updateTask(task)
+    });
+  }
+
+  private updateTask(task: Task) {
+    this.tasks.update(tasks => tasks.map(t => t.id === task.id ? task : t))
+  }
 }
