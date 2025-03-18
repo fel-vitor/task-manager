@@ -12,4 +12,8 @@ export class TasksService {
   getAll(): Observable<Task[]> {
     return this.httpClient.get<Task[]>('/api/tasks');
   }
+
+  patch(id: string, payload: Partial<Task>) {
+    return this.httpClient.patch<Task>(`/api/tasks/${id}`, payload);
+  }
 }
