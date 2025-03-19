@@ -33,6 +33,7 @@ describe('ListItemComponent', () => {
 
   it('Deve renderizar o título da tarefa', async () => {
     const fakeTask: Task = {
+      id: '1',
       title: 'Nome da tarefa',
       completed: false,
     };
@@ -48,6 +49,7 @@ describe('ListItemComponent', () => {
 
   it('Deve emitir um evento ao completar a tarefa', async () => {
     const fakeTask: Task = {
+      id: '1',
       title: 'Nome da tarefa',
       completed: false,
     };
