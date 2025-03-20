@@ -28,18 +28,30 @@ export class ListComponent implements OnInit {
   }
 
   onComplete(task: Task) {
-    this.tasksService.patch(task.id, { completed: true }).subscribe(task => {
-      this.updateTask(task)
+    this.tasksService.patch(task.id, { completed: true }).subscribe((task) => {
+      this.updateTask(task);
     });
   }
 
   onNotComplete(task: Task) {
-    this.tasksService.patch(task.id, { completed: false }).subscribe(task => {
-      this.updateTask(task)
+    this.tasksService.patch(task.id, { completed: false }).subscribe((task) => {
+      this.updateTask(task);
+    });
+  }
+
+  onRemove(task: Task) {
+    this.tasksService.delete(task.id).subscribe((task) => {
+      this.removeTask(task);
     });
   }
 
   private updateTask(task: Task) {
-    this.tasks.update(tasks => tasks.map(t => t.id === task.id ? task : t))
+    this.tasks.update((tasks) =>
+      tasks.map((t) => (t.id === task.id ? task : t))
+    );
+  }
+
+  private removeTask(task: Task) {
+    this.tasks.update((tasks) => tasks.filter((t) => t.id !== task.id));
   }
 }
