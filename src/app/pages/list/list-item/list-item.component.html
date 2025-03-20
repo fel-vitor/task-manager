@@ -6,22 +6,30 @@
 
     <div class="w-full card-actions justify-end">
       @if(task().completed) {
-        <button
-          class="btn btn-primary btn-xs"
-          data-testid="list-item-mark-as-pending-action"
-          (click)="onMarkAsPending()"
-        >
-          Marcar como pendente
-        </button>
+      <button
+        class="btn btn-primary btn-xs"
+        data-testid="list-item-mark-as-pending-action"
+        (click)="onMarkAsPending()"
+      >
+        Marcar como pendente
+      </button>
       } @else {
-        <button
-          class="btn btn-primary btn-xs"
-          data-testid="list-item-complete-action"
-          (click)="onComplete()"
-        >
-          Completar
-        </button>
+      <button
+        class="btn btn-primary btn-xs"
+        data-testid="list-item-complete-action"
+        (click)="onComplete()"
+      >
+        Completar
+      </button>
       }
+
+      <button
+        class="btn btn-error btn-xs"
+        data-testid="list-item-remove-action"
+        (click)="onRemove()"
+      >
+        Remover
+      </button>
     </div>
   </div>
 </div>
