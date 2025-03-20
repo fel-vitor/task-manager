@@ -12,6 +12,7 @@ async function setup(fakeTask: Task) {
       [task]="task"
       (complete)="onCompleteTask($event)"
       (notComplete)="onNotComplete($event)"
+      (remove)="onRemove($event)"
     />`,
   })
   class HostComponent {
@@ -20,6 +21,8 @@ async function setup(fakeTask: Task) {
     onCompleteTask() {}
 
     onNotComplete() {}
+
+    onRemove(task: Task) {}
   }
 
   await TestBed.configureTestingModule({
@@ -98,6 +101,24 @@ describe('ListItemComponent', () => {
 
       expect(onCompleteTaskSpy).toHaveBeenCalled();
     });
+
+    it('Deve emitir um evento de remover tarefa', async () => {
+      const fakeTask: Task = {
+        id: '1',
+        title: 'Nome da tarefa',
+        completed: false
+      }
+
+      const { fixture, testHelper } = await setup(fakeTask);
+
+      const onRemoveTaskSpy = jest.spyOn(fixture.componentInstance, 'onRemove');
+
+      fixture.detectChanges();
+
+      testHelper.click('list-item-remove-action');
+
+      expect(onRemoveTaskSpy).toHaveBeenCalledWith(fakeTask);
+    });
   });
 
   describe('Quando a tarefa estiver concluída', () => {
@@ -149,5 +170,23 @@ describe('ListItemComponent', () => {
 
       expect(onNotCompletegSpy).toHaveBeenCalled();
     });
+
+    it('Deve emitir um evento de remover tarefa', async () => {
+      const fakeTask: Task = {
+        id: '1',
+        title: 'Nome da Tarefa',
+        completed: true,
+      }
+
+      const { fixture, testHelper } = await setup(fakeTask);
+
+      const onRemoveTaskSpy = jest.spyOn(fixture.componentInstance, 'onRemove');
+
+      fixture.detectChanges();
+
+      testHelper.click('list-item-remove-action');
+
+      expect(onRemoveTaskSpy).toHaveBeenCalledWith(fakeTask);
+    })
   });
 });
