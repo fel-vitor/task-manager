@@ -133,6 +133,28 @@ describe('ListComponent', () => {
 
       expect(testHelper.queryByTestId('completed-list-item')).toBeTruthy();  
     });
+
+    it('Deve remover uma tarefa', () => {
+      const fakeTask: Task = { id: '1', title: 'Nome da Tarefa', completed: false }
+
+      const fakeTasks: Task[] = [fakeTask];
+
+      (tasksService.getAll as jest.Mock).mockReturnValue(of(fakeTasks));
+
+      (tasksService.delete as jest.Mock).mockReturnValue(of(fakeTask));
+
+      fixture.detectChanges();
+
+      const todoItemDebugEl = testHelper.queryByTestId('todo-list-item');
+
+      (todoItemDebugEl.componentInstance as FakeListItemComponent).remove.emit(fakeTask);
+
+      expect(tasksService.delete).toHaveBeenCalledWith(fakeTask.id);
+
+      fixture.detectChanges();
+
+      expect(testHelper.queryByTestId('todo-list-item')).toBeNull();
+    });
   });
 
   describe('Quando a tarefa está concluída', () => {
@@ -161,6 +183,28 @@ describe('ListComponent', () => {
       fixture.detectChanges();
 
       expect(testHelper.queryByTestId('todo-list-item')).toBeTruthy();
+      expect(testHelper.queryByTestId('completed-list-item')).toBeNull();
+    })
+
+    it('Deve remover uma tarefa', () => {
+      const fakeTask: Task = { id: '1', title: 'Nome da Tarefa', completed: true }
+
+      const fakeTasks: Task[] = [fakeTask];
+
+      (tasksService.getAll as jest.Mock).mockReturnValue(of(fakeTasks));
+
+      (tasksService.delete as jest.Mock).mockReturnValue(of(fakeTask));
+
+      fixture.detectChanges();
+
+      const completedItemDebugEl = testHelper.queryByTestId('completed-list-item');
+
+      (completedItemDebugEl.componentInstance as FakeListItemComponent).remove.emit(fakeTask);
+
+      expect(tasksService.delete).toHaveBeenCalledWith(fakeTask.id);
+
+      fixture.detectChanges();
+
       expect(testHelper.queryByTestId('completed-list-item')).toBeNull();
     })
   })
