@@ -12,7 +12,9 @@ export class FakeListItemComponent implements ListItemComponent {
 
   complete = output<Task>();
   notComplete = output<Task>();
+  remove = output<Task>();
 
   onComplete(): void {}
   onMarkAsPending(): void {}
+  onRemove(): void {}
 }
