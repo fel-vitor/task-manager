@@ -16,4 +16,8 @@ export class TasksService {
   patch(id: string, payload: Partial<Task>) {
     return this.httpClient.patch<Task>(`/api/tasks/${id}`, payload);
   }
+
+  delete(id: string) {
+    return this.httpClient.delete<Task>(`/api/tasks/${id}`);
+  }
 }
