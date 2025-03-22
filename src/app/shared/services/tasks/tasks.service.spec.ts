@@ -5,7 +5,7 @@ import {
   HttpTestingController,
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
-import { Task } from '../../interfaces/task.interface';
+import { Task, TaskWithoutId } from '../../interfaces/task.interface';
 import { TasksService } from './tasks.service';
 
 describe('TasksService', () => {
@@ -85,5 +85,27 @@ describe('TasksService', () => {
     tick();
 
     expect(result).toEqual(fakeTask);
+  }));
+
+  it('post() deve criar uma tarefa', fakeAsync(() => {
+    const fakeTask: TaskWithoutId = { title: 'Item 1', completed: false };
+
+    let result: Task | null = null;
+
+    service.post(fakeTask).subscribe((response) => {
+      result = response;
+    });
+
+    const request = httpTestingController.expectOne((req) => {
+      return req.method === 'POST' && req.url === '/api/tasks/';
+    });
+
+    const reponse: Task = { ...fakeTask, id: '1' };
+
+    request.flush(reponse);
+
+    tick();
+
+    expect(result).toEqual(reponse);
   }));
 });
