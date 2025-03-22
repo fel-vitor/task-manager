@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Task } from '../../interfaces/task.interface';
+import { Task, TaskWithoutId } from '../../interfaces/task.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +11,10 @@ export class TasksService {
 
   getAll(): Observable<Task[]> {
     return this.httpClient.get<Task[]>('/api/tasks');
+  }
+
+  post(payload: TaskWithoutId) {
+    return this.httpClient.post<Task>('/api/tasks/', payload);
   }
 
   patch(id: string, payload: Partial<Task>) {
