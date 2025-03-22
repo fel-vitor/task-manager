@@ -1,32 +1,28 @@
-<div class="w-full flex justify-center">
-  <div class="w-full flex flex-col max-w-xl">
-    <section data-testid="todo-list" class="space-y-4 my-4">
-      <h1 class="text-center">Tarefas Pendentes</h1>
+<section data-testid="todo-list" class="space-y-4 my-4">
+  <h1 class="text-center">Tarefas Pendentes</h1>
 
-      @for (task of pendingTasks(); track task.title) {
-      <app-list-item
-        [task]="task"
-        data-testid="todo-list-item"
-        (complete)="onComplete($event)"
-        (remove)="onRemove($event)"
-      />
-      }@empty {
-      <app-no-items class="flex justify-center" />
-      }
-    </section>
+  @for (task of pendingTasks(); track task.title) {
+  <app-list-item
+    [task]="task"
+    data-testid="todo-list-item"
+    (complete)="onComplete($event)"
+    (remove)="onRemove($event)"
+  />
+  }@empty {
+  <app-no-items class="flex justify-center" />
+  }
+</section>
 
-    <section data-testid="completed-list" class="space-y-4 my-4">
-      <h1 class="text-center">Tarefas Concluídas</h1>
-      @for (task of completedTasks(); track task.title) {
-      <app-list-item
-        [task]="task"
-        data-testid="completed-list-item"
-        (notComplete)="onNotComplete($event)"
-        (remove)="onRemove($event)"
-      />
-      } @empty {
-      <app-no-items class="flex justify-center" />
-      }
-    </section>
-  </div>
-</div>
+<section data-testid="completed-list" class="space-y-4 my-4">
+  <h1 class="text-center">Tarefas Concluídas</h1>
+  @for (task of completedTasks(); track task.title) {
+  <app-list-item
+    [task]="task"
+    data-testid="completed-list-item"
+    (notComplete)="onNotComplete($event)"
+    (remove)="onRemove($event)"
+  />
+  } @empty {
+  <app-no-items class="flex justify-center" />
+  }
+</section>
