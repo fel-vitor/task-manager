@@ -8,6 +8,7 @@ import { ListItemComponent } from './list-item/list-item.component';
 import { FakeListItemComponent } from '@testing/mocks/fake-list-item.component';
 import { Task } from 'src/app/shared/interfaces/task.interface';
 import { TestHelper } from '@testing/helpers/test-helper';
+import { MockComponent, MockProvider } from 'ng-mocks';
 
 describe('ListComponent', () => {
   let fixture: ComponentFixture<ListComponent>;
@@ -17,12 +18,7 @@ describe('ListComponent', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [ListComponent],
-      providers: [
-        {
-          provide: TasksService,
-          useClass: FakeTasksService,
-        },
-      ],
+      providers: [MockProvider(TasksService)],
     });
 
     TestBed.overrideComponent(ListComponent, {
@@ -30,7 +26,7 @@ describe('ListComponent', () => {
         imports: [ListItemComponent],
       },
       add: {
-        imports: [FakeListItemComponent],
+        imports: [MockComponent(ListItemComponent)],
       },
     });
 
@@ -68,15 +64,15 @@ describe('ListComponent', () => {
 
     expect(todoItems.length).toBe(3);
 
-    expect(todoItems[0].componentInstance.task()).toEqual({
+    expect(todoItems[0].componentInstance.task).toEqual({
       title: 'Item 1',
       completed: false,
     });
-    expect(todoItems[1].componentInstance.task()).toEqual({
+    expect(todoItems[1].componentInstance.task).toEqual({
       title: 'Item 2',
       completed: false,
     });
-    expect(todoItems[2].componentInstance.task()).toEqual({
+    expect(todoItems[2].componentInstance.task).toEqual({
       title: 'Item 3',
       completed: false,
     });
@@ -93,15 +89,15 @@ describe('ListComponent', () => {
 
     expect(completedItems.length).toBe(3);
 
-    expect(completedItems[0].componentInstance.task()).toEqual({
+    expect(completedItems[0].componentInstance.task).toEqual({
       title: 'Item 4',
       completed: true,
     });
-    expect(completedItems[1].componentInstance.task()).toEqual({
+    expect(completedItems[1].componentInstance.task).toEqual({
       title: 'Item 5',
       completed: true,
     });
-    expect(completedItems[2].componentInstance.task()).toEqual({
+    expect(completedItems[2].componentInstance.task).toEqual({
       title: 'Item 6',
       completed: true,
     });
@@ -125,17 +121,25 @@ describe('ListComponent', () => {
 
       expect(testHelper.queryByTestId('completed-list-item')).toBeNull();
 
-      (todoItemDebugEl.componentInstance as FakeListItemComponent).complete.emit(fakeTask);
+      (
+        todoItemDebugEl.componentInstance as FakeListItemComponent
+      ).complete.emit(fakeTask);
 
-      expect(tasksService.patch).toHaveBeenCalledWith(fakeTask.id, { completed: true });
+      expect(tasksService.patch).toHaveBeenCalledWith(fakeTask.id, {
+        completed: true,
+      });
 
       fixture.detectChanges();
 
-      expect(testHelper.queryByTestId('completed-list-item')).toBeTruthy();  
+      expect(testHelper.queryByTestId('completed-list-item')).toBeTruthy();
     });
 
     it('Deve remover uma tarefa', () => {
-      const fakeTask: Task = { id: '1', title: 'Nome da Tarefa', completed: false }
+      const fakeTask: Task = {
+        id: '1',
+        title: 'Nome da Tarefa',
+        completed: false,
+      };
 
       const fakeTasks: Task[] = [fakeTask];
 
@@ -147,7 +151,9 @@ describe('ListComponent', () => {
 
       const todoItemDebugEl = testHelper.queryByTestId('todo-list-item');
 
-      (todoItemDebugEl.componentInstance as FakeListItemComponent).remove.emit(fakeTask);
+      (todoItemDebugEl.componentInstance as FakeListItemComponent).remove.emit(
+        fakeTask
+      );
 
       expect(tasksService.delete).toHaveBeenCalledWith(fakeTask.id);
 
@@ -159,7 +165,11 @@ describe('ListComponent', () => {
 
   describe('Quando a tarefa está concluída', () => {
     it('Deve marcar a tarefa como pendente', () => {
-      const fakeTask: Task = { id: '1', title:'Nome da tarefa', completed: true };
+      const fakeTask: Task = {
+        id: '1',
+        title: 'Nome da tarefa',
+        completed: true,
+      };
 
       const fakeTasks: Task[] = [fakeTask];
 
@@ -167,27 +177,39 @@ describe('ListComponent', () => {
 
       const pendingTaskResponse = { ...fakeTask, completed: false };
 
-      (tasksService.patch as jest.Mock).mockReturnValue(of(pendingTaskResponse));
+      (tasksService.patch as jest.Mock).mockReturnValue(
+        of(pendingTaskResponse)
+      );
 
       fixture.detectChanges();
 
       expect(testHelper.queryByTestId('todo-list-item')).toBeNull();
       expect(testHelper.queryByTestId('completed-list-item')).toBeTruthy();
 
-      const completedItemDebugEl = testHelper.queryByTestId('completed-list-item');
+      const completedItemDebugEl = testHelper.queryByTestId(
+        'completed-list-item'
+      );
 
-      (completedItemDebugEl.componentInstance as FakeListItemComponent).notComplete.emit(fakeTask);
+      (
+        completedItemDebugEl.componentInstance as FakeListItemComponent
+      ).notComplete.emit(fakeTask);
 
-      expect(tasksService.patch).toHaveBeenCalledWith(fakeTask.id, { completed: false });
+      expect(tasksService.patch).toHaveBeenCalledWith(fakeTask.id, {
+        completed: false,
+      });
 
       fixture.detectChanges();
 
       expect(testHelper.queryByTestId('todo-list-item')).toBeTruthy();
       expect(testHelper.queryByTestId('completed-list-item')).toBeNull();
-    })
+    });
 
     it('Deve remover uma tarefa', () => {
-      const fakeTask: Task = { id: '1', title: 'Nome da Tarefa', completed: true }
+      const fakeTask: Task = {
+        id: '1',
+        title: 'Nome da Tarefa',
+        completed: true,
+      };
 
       const fakeTasks: Task[] = [fakeTask];
 
@@ -197,15 +219,19 @@ describe('ListComponent', () => {
 
       fixture.detectChanges();
 
-      const completedItemDebugEl = testHelper.queryByTestId('completed-list-item');
+      const completedItemDebugEl = testHelper.queryByTestId(
+        'completed-list-item'
+      );
 
-      (completedItemDebugEl.componentInstance as FakeListItemComponent).remove.emit(fakeTask);
+      (
+        completedItemDebugEl.componentInstance as FakeListItemComponent
+      ).remove.emit(fakeTask);
 
       expect(tasksService.delete).toHaveBeenCalledWith(fakeTask.id);
 
       fixture.detectChanges();
 
       expect(testHelper.queryByTestId('completed-list-item')).toBeNull();
-    })
-  })
+    });
+  });
 });
