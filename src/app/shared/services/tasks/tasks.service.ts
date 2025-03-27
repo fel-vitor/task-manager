@@ -17,6 +17,10 @@ export class TasksService {
     return this.httpClient.post<Task>('/api/tasks/', payload);
   }
 
+  put(id: string, payload: TaskWithoutId) {
+    return this.httpClient.put<Task>(`/api/tasks/${id}`, payload);
+  }
+
   patch(id: string, payload: Partial<Task>) {
     return this.httpClient.patch<Task>(`/api/tasks/${id}`, payload);
   }
