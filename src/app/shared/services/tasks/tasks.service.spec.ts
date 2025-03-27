@@ -108,4 +108,24 @@ describe('TasksService', () => {
 
     expect(result).toEqual(reponse);
   }));
+
+  it('put() deve editar uma tarefa', fakeAsync(() => {
+    const fakeTask: Task = { id: '1', title: 'Item 1', completed: false };
+
+    let result: Task | null = null;
+
+    service.put(fakeTask.id, fakeTask).subscribe((response) => {
+      result = response;
+    });
+
+    const request = httpTestingController.expectOne((req) => {
+      return req.method === 'PUT' && req.url === `/api/tasks/${fakeTask.id}`;
+    });
+
+    request.flush(fakeTask);
+
+    tick();
+
+    expect(result).toEqual(fakeTask);
+  }));
 });
