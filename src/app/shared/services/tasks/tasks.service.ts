@@ -13,6 +13,10 @@ export class TasksService {
     return this.httpClient.get<Task[]>('/api/tasks');
   }
 
+  getById(id: string): Observable<Task> {
+    return this.httpClient.get<Task>(`/api/tasks/${id}`);
+  }
+
   post(payload: TaskWithoutId) {
     return this.httpClient.post<Task>('/api/tasks/', payload);
   }
