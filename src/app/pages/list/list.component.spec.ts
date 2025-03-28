@@ -1,16 +1,21 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { of } from 'rxjs';
-import { TasksService } from 'src/app/shared/services/tasks/tasks.service';
-import { ListComponent } from './list.component';
-import { FakeTasksService } from '@testing/mocks/fake-tasks.service';
-import { ListItemComponent } from './list-item/list-item.component';
-import { FakeListItemComponent } from '@testing/mocks/fake-list-item.component';
-import { Task } from 'src/app/shared/interfaces/task.interface';
-import { TestHelper } from '@testing/helpers/test-helper';
-import { MockComponent, MockProvider } from 'ng-mocks';
 import { Location } from '@angular/common';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
+import { TestHelper } from '@testing/helpers/test-helper';
+import { FakeListItemComponent } from '@testing/mocks/fake-list-item.component';
+import { MockComponent, MockProvider } from 'ng-mocks';
+import { of } from 'rxjs';
+import { Task } from 'src/app/shared/interfaces/task.interface';
+import { TasksService } from 'src/app/shared/services/tasks/tasks.service';
+import { EditTaskComponent } from '../edit-task/edit-task.component';
+import { ListItemComponent } from './list-item/list-item.component';
+import { ListComponent } from './list.component';
 
 describe('ListComponent', () => {
   let fixture: ComponentFixture<ListComponent>;
@@ -22,10 +27,16 @@ describe('ListComponent', () => {
       imports: [ListComponent],
       providers: [
         MockProvider(TasksService),
-        provideRouter([{
-          path: 'create',
-          component: MockComponent(ListComponent),
-        }])
+        provideRouter([
+          {
+            path: 'create',
+            component: MockComponent(ListComponent),
+          },
+          {
+            path: 'edit/:id',
+            component: MockComponent(EditTaskComponent),
+          },
+        ]),
       ],
     });
 
@@ -169,6 +180,34 @@ describe('ListComponent', () => {
 
       expect(testHelper.queryByTestId('todo-list-item')).toBeNull();
     });
+
+    it('Deve redirecionar para a rota de editação de tarefa', fakeAsync(() => {
+      const fakeTask: Task = {
+        id: '1',
+        title: 'Item 1',
+        completed: false,
+      };
+
+      const fakeTasks: Task[] = [fakeTask];
+
+      (tasksService.getAll as jest.Mock).mockReturnValue(of(fakeTasks));
+
+      fixture.detectChanges();
+
+      const todoItemDebugEl = testHelper.queryByTestId('todo-list-item');
+
+      (todoItemDebugEl.componentInstance as ListItemComponent).edit.emit(
+        fakeTask
+      );
+
+      fixture.detectChanges();
+
+      const location = TestBed.inject(Location);
+
+      tick();
+
+      expect(location.path()).toBe(`/edit/${fakeTask.id}`);
+    }));
   });
 
   describe('Quando a tarefa está concluída', () => {
@@ -241,6 +280,36 @@ describe('ListComponent', () => {
 
       expect(testHelper.queryByTestId('completed-list-item')).toBeNull();
     });
+
+    it('Deve redirecionar para a rota de edição de tarefa', fakeAsync(() => {
+      const fakeTask: Task = {
+        id: '1',
+        title: 'Item 1',
+        completed: true,
+      };
+
+      const fakeTasks: Task[] = [fakeTask];
+
+      (tasksService.getAll as jest.Mock).mockReturnValue(of(fakeTasks));
+
+      fixture.detectChanges();
+
+      const completedItemDebugEl = testHelper.queryByTestId(
+        'completed-list-item'
+      );
+
+      (completedItemDebugEl.componentInstance as ListItemComponent).edit.emit(
+        fakeTask
+      );
+
+      fixture.detectChanges();
+
+      const location = TestBed.inject(Location);
+
+      tick();
+
+      expect(location.path()).toBe(`/edit/${fakeTask.id}`);
+    }));
   });
 
   it('Deve redirecionar para a rota de criação de tarefa', fakeAsync(() => {
