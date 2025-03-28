@@ -15,6 +15,7 @@ export class ListItemComponent {
   complete = output<Task>();
   notComplete = output<Task>();
   remove = output<Task>();
+  edit = output<Task>();
 
   onComplete() {
     this.complete.emit(this.task());
@@ -26,5 +27,9 @@ export class ListItemComponent {
 
   onRemove() {
     this.remove.emit(this.task());
+  }
+
+  onEdit() {
+    this.edit.emit(this.task());
   }
 }
