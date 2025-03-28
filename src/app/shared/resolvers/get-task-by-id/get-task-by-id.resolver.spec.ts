@@ -10,12 +10,13 @@ import {
 import { RouterTestingHarness } from '@angular/router/testing';
 
 import { MockProvider } from 'ng-mocks';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { Task } from '../../interfaces/task.interface';
 import { TasksService } from '../../services/tasks/tasks.service';
 import { getTaskByIdResolver } from './get-task-by-id.resolver';
 import { Component, input } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-test',
@@ -67,5 +68,26 @@ describe('getTaskByIdResolver', () => {
     expect(tasksService.getById).toHaveBeenCalledWith(fakeTask.id);
 
     expect(fakeComponentDebugEl.componentInstance.task()).toBe(fakeTask);
+  });
+
+  it('Deve retornar um erro caso a tarefa não exista', async () => {
+    const tasksService = TestBed.inject(TasksService);
+
+    const fakeTask: Task = { id: '1', title: 'Item 1', completed: false };
+
+    const fakeHttpErrorResponse = new HttpErrorResponse({
+      status: 404,
+      statusText: 'Not Found',
+    });
+
+    (tasksService.getById as jest.Mock).mockReturnValue(
+      throwError(() => fakeHttpErrorResponse)
+    );
+
+    try {
+      await RouterTestingHarness.create(`test/${fakeTask.id}`);
+    } catch (error) {
+      expect(error).toEqual(fakeHttpErrorResponse);
+    }
   });
 });
