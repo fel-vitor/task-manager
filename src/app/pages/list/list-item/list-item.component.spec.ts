@@ -13,6 +13,7 @@ async function setup(fakeTask: Task) {
       (complete)="onCompleteTask($event)"
       (notComplete)="onNotComplete($event)"
       (remove)="onRemove($event)"
+      (edit)="onEdit($event)"
     />`,
   })
   class HostComponent {
@@ -23,6 +24,8 @@ async function setup(fakeTask: Task) {
     onNotComplete() {}
 
     onRemove(task: Task) {}
+
+    onEdit(task: Task) {}
   }
 
   await TestBed.configureTestingModule({
@@ -106,8 +109,8 @@ describe('ListItemComponent', () => {
       const fakeTask: Task = {
         id: '1',
         title: 'Nome da tarefa',
-        completed: false
-      }
+        completed: false,
+      };
 
       const { fixture, testHelper } = await setup(fakeTask);
 
@@ -118,6 +121,24 @@ describe('ListItemComponent', () => {
       testHelper.click('list-item-remove-action');
 
       expect(onRemoveTaskSpy).toHaveBeenCalledWith(fakeTask);
+    });
+
+    it('Deve emitir um evento de editar tarefa', async () => {
+      const fakeTask: Task = {
+        id: '1',
+        title: 'Nome da tarefa',
+        completed: false,
+      };
+
+      const { fixture, testHelper } = await setup(fakeTask);
+
+      const onEditTaskSpy = jest.spyOn(fixture.componentInstance, 'onEdit');
+
+      fixture.detectChanges();
+
+      testHelper.click('list-item-edit-action');
+
+      expect(onEditTaskSpy).toHaveBeenCalledWith(fakeTask);
     });
   });
 
@@ -176,7 +197,7 @@ describe('ListItemComponent', () => {
         id: '1',
         title: 'Nome da Tarefa',
         completed: true,
-      }
+      };
 
       const { fixture, testHelper } = await setup(fakeTask);
 
@@ -187,6 +208,24 @@ describe('ListItemComponent', () => {
       testHelper.click('list-item-remove-action');
 
       expect(onRemoveTaskSpy).toHaveBeenCalledWith(fakeTask);
-    })
+    });
+
+    it('Deve emitir um evento de editar tarefa', async () => {
+      const fakeTask: Task = {
+        id: '1',
+        title: 'Nome da tarefa',
+        completed: true,
+      };
+
+      const { fixture, testHelper } = await setup(fakeTask);
+
+      const onEditTaskSpy = jest.spyOn(fixture.componentInstance, 'onEdit');
+
+      fixture.detectChanges();
+
+      testHelper.click('list-item-edit-action');
+
+      expect(onEditTaskSpy).toHaveBeenCalledWith(fakeTask);
+    });
   });
 });
