@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { TestHelper } from '@testing/helpers/test-helper';
-import { MockProviders } from 'ng-mocks';
+import { MockDirective, MockProviders } from 'ng-mocks';
 import { of } from 'rxjs';
 import { Task, TaskWithoutId } from 'src/app/shared/interfaces/task.interface';
 import { TasksService } from 'src/app/shared/services/tasks/tasks.service';
 import { EditTaskComponent } from './edit-task.component';
+import { ButtonXsDirective } from 'src/app/shared/directives/button/button.directive';
 
 describe('EditTaskComponent', () => {
   let fixture: ComponentFixture<EditTaskComponent>;
@@ -18,6 +19,15 @@ describe('EditTaskComponent', () => {
       providers: [MockProviders(TasksService, Router)],
       imports: [EditTaskComponent],
     }).compileComponents();
+
+    TestBed.overrideComponent(EditTaskComponent, {
+      remove: {
+        imports: [ButtonXsDirective]
+      },
+      add: {
+        imports: [MockDirective(ButtonXsDirective)]
+      }
+    });
 
     fixture = TestBed.createComponent(EditTaskComponent);
     testHelper = new TestHelper(fixture);

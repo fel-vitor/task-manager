@@ -9,13 +9,14 @@ import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { TestHelper } from '@testing/helpers/test-helper';
 import { FakeListItemComponent } from '@testing/mocks/fake-list-item.component';
-import { MockComponent, MockProvider } from 'ng-mocks';
+import { MockComponent, MockDirective, MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 import { Task } from 'src/app/shared/interfaces/task.interface';
 import { TasksService } from 'src/app/shared/services/tasks/tasks.service';
 import { EditTaskComponent } from '../edit-task/edit-task.component';
 import { ListItemComponent } from './list-item/list-item.component';
 import { ListComponent } from './list.component';
+import { ButtonDirective } from 'src/app/shared/directives/button/button.directive';
 
 describe('ListComponent', () => {
   let fixture: ComponentFixture<ListComponent>;
@@ -42,10 +43,13 @@ describe('ListComponent', () => {
 
     TestBed.overrideComponent(ListComponent, {
       remove: {
-        imports: [ListItemComponent],
+        imports: [ListItemComponent, ButtonDirective],
       },
       add: {
-        imports: [MockComponent(ListItemComponent)],
+        imports: [
+          MockComponent(ListItemComponent),
+          MockDirective(ButtonDirective),
+        ],
       },
     });
 
