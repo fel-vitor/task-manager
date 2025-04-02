@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -20,6 +20,8 @@ export class LoginComponent {
   authService = inject(AuthService);
   route = inject(Router);
 
+  showAuthFailedMessage = signal(false);
+
   form: FormGroup = new FormGroup({
     email: new FormControl<string>('', {
       nonNullable: true,
@@ -32,11 +34,20 @@ export class LoginComponent {
   });
 
   onSubmit() {
+    if (this.form.invalid) {
+      return;
+    }
+
     const email = this.form.value.email as string;
     const password = this.form.value.password as string;
 
-    this.authService.login(email, password).subscribe((res) => {
-      this.route.navigateByUrl('/');
+    this.authService.login(email, password).subscribe({
+      next: () => {
+        this.route.navigateByUrl('/');
+      },
+      error: () => {
+        this.showAuthFailedMessage.set(true);
+      },
     });
   }
 }
