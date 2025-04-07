@@ -8,6 +8,7 @@ import {
 import { Router } from '@angular/router';
 import { ButtonXsDirective } from 'src/app/shared/directives/button/button.directive';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { AuthStoreService } from 'src/app/shared/stores/auth.store';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,7 @@ import { AuthService } from 'src/app/shared/services/auth/auth.service';
 export class LoginComponent {
   authService = inject(AuthService);
   route = inject(Router);
+  authStoreService = inject(AuthStoreService);
 
   showAuthFailedMessage = signal(false);
 
@@ -43,6 +45,7 @@ export class LoginComponent {
 
     this.authService.login(email, password).subscribe({
       next: () => {
+        this.authStoreService.setAsLoggedIn();
         this.route.navigateByUrl('/');
       },
       error: () => {
