@@ -5,11 +5,15 @@ import { LocalStorageToken } from '../../tokens/local-storage.token';
   providedIn: 'root',
 })
 export class AuthTokenManagerService {
-  localStorage = inject(LocalStorageToken);
+  #localStorage = inject(LocalStorageToken);
 
   #tokenKey = 'auth-token';
 
   setToken(token: string) {
-    this.localStorage.setItem(this.#tokenKey, token);
+    this.#localStorage.setItem(this.#tokenKey, token);
+  }
+
+  getToken() {
+    return this.#localStorage.getItem(this.#tokenKey);
   }
 }
