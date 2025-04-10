@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { MockComponent } from 'ng-mocks';
-import { HeaderComponent } from 'src/shared/components/header/header.component';
 import { AppComponent } from './app.component';
+import { HeaderComponent } from './shared/components/header/header.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
