@@ -16,4 +16,8 @@ export class AuthTokenManagerService {
   getToken() {
     return this.#localStorage.getItem(this.#tokenKey);
   }
+
+  removeToken() {
+    return this.#localStorage.removeItem(this.#tokenKey);
+  }
 }
