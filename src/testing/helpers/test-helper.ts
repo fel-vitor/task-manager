@@ -8,8 +8,8 @@ export class TestHelper<T> {
     return this.queryByTestId(testId).nativeElement.textContent.trim();
   }
 
-  click(testId: string) {
-    this.queryByTestId(testId).nativeElement.click();
+  click(testId: string, debugElement = this.fixture.debugElement) {
+    this.queryByTestId(testId, debugElement).nativeElement.click();
   }
 
   getInputValue(testId: string) {
@@ -38,7 +38,11 @@ export class TestHelper<T> {
     this.queryByTestId(testId).triggerEventHandler('submit', null);
   }
 
-  queryByTestId(testId: string) {
-    return this.fixture.debugElement.query(By.css(`[data-testid="${testId}"]`));
+  queryByTestId(testId: string, debugElement = this.fixture.debugElement) {
+    return debugElement.query(By.css(`[data-testid="${testId}"]`));
+  }
+
+  queryAllByTestId(testId: string, debugElement = this.fixture.debugElement) {
+    return debugElement.queryAll(By.css(`[data-testid="${testId}"]`));
   }
 }
