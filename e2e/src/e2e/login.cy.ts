@@ -30,7 +30,7 @@ describe('Fluxo de autenticação', () => {
       cy.location('pathname').should('equal', '/');
     });
 
-    it.only('Deve fazer o logout do usuário', () => {
+    it('Deve fazer o logout do usuário', () => {
       cy.getByTestId('header-logout').click();
 
       cy.location('pathname').should('equal', '/login');
